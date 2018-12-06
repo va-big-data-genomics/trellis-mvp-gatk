@@ -28,7 +28,7 @@ git clone https://github.com/StanfordBioinformatics/GATK-fivedollar.git
 wget https://github.com/broadinstitute/cromwell/releases/download/35/cromwell-35.jar
 ```
 
-## Converting fastq (or fastq.gz file) to ubam (*Only if the input file format is fastq or fastq.gz) 
+## (If needed) Converting fastq (or fastq.gz file) to ubam
 
 * Install dsub
 
