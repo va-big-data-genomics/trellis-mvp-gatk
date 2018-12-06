@@ -1,0 +1,2 @@
+java -Dconfig.file=google-adc.conf -Dbackend.providers.JES.config.project=gbsc-gcp-project-mvp-dev -Dbackend.providers.JES.config.root=gs://gbsc-gcp-project-mvp-dev-group/jina-gatk-test3/gatk-fc-mvp1 -jar ./cromwell-35.jar run ./five-dollar-genome-analysis-pipeline/fc_germline_single_sample_workflow.wdl --inputs ./five-dollar-genome-analysis-pipeline/fc_germline_single_sample_workflow.hg38.mvpinputs.json --options ./five-dollar-genome-analysis-pipeline/generic.google-papi.options.json
+
