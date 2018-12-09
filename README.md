@@ -39,7 +39,7 @@ wget https://github.com/broadinstitute/cromwell/releases/download/35/cromwell-35
 source dsub/dsub_libs/bin/activate
 ```
 
-* Run FASTQTOSAM tool
+* Run FastqToSam tool
 
 ```
 chmod 755 mvp-fastqtoubam.sh
