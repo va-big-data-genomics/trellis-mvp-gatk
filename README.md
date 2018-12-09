@@ -48,8 +48,8 @@ $mvp_fastq_bucket : google cloud bucket with your fastq files
 $mvp_ubam_bucket : google cloud bucket for your ubam file  
 $FASTQ_1, $FASTQ_2 : input files  
 $UBAM : output file  
-RG Read Group name  
-SM Sample Name  
+RG : Read Group name  
+SM : Sample Name  
  
 ```
 chmod 755 mvp-fastqtoubam.sh
