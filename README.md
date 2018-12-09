@@ -39,7 +39,7 @@ wget https://github.com/broadinstitute/cromwell/releases/download/35/cromwell-35
 source dsub/dsub_libs/bin/activate
 ```
 
-* Run FastqToSam tool
+* Run FastqToSam tool  
 We need these parameter to the run file as below.
 
 $dsub_venv : your local path where dsub was installed  
