@@ -42,14 +42,14 @@ source dsub/dsub_libs/bin/activate
 * Run FastqToSam tool
 We need these parameter to the run file as below.
 
-$dsub_venv : your local path where dsub was installed 
-$mvp_project : your google cloud project 
-$mvp_fastq_bucket : google cloud bucket with your fastq files
-$mvp_ubam_bucket : google cloud bucket for your ubam file
-$FASTQ_1, $FASTQ_2 : input files
-$UBAM : output file
-RG Read Group name
-SM Sample Name
+$dsub_venv : your local path where dsub was installed  
+$mvp_project : your google cloud project  
+$mvp_fastq_bucket : google cloud bucket with your fastq files  
+$mvp_ubam_bucket : google cloud bucket for your ubam file  
+$FASTQ_1, $FASTQ_2 : input files  
+$UBAM : output file  
+RG Read Group name  
+SM Sample Name  
  
 ```
 chmod 755 mvp-fastqtoubam.sh
