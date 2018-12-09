@@ -40,8 +40,7 @@ source dsub/dsub_libs/bin/activate
 ```
 
 * Run FastqToSam tool  
-We need these parameter to the run file as below.
-
+We need these parameter to the run file as below.  
 $dsub_venv : your local path where dsub was installed  
 $mvp_project : your google cloud project  
 $mvp_fastq_bucket : google cloud bucket with your fastq files  
