@@ -1,0 +1,38 @@
+###############################################################
+#     
+#     Input/Output/Environment Variables for Run Files 
+#     	
+#     	1. Converting Fastq to Ubam
+#     	2. Running GATK
+#         																	- 12/11/2018  
+#         																	- Jina
+###############################################################
+
+1. Converting Fastq to Ubamh
+
+* in mvp-fastqtobam.sh
+
+$dsub_venv : your local path where dsub was installed
+$mvp_project : your google cloud project
+$mvp_fastq_bucket : google cloud bucket with your fastq files
+$mvp_ubam_bucket : google cloud bucket for your ubam file
+$FASTQ_1, $FASTQ_2 : input files
+$UBAM : output file
+RG : Read Group name
+SM : Sample Name
+
+2. Running GATK
+
+* in five-dollar-genome-analysis-pipeline/fc_germline_single_sample_workflow.hg38.mvpinputs.json
+
+Your variables informatiion  related to SAMPLE NAME AND UNMAPPED BAMS in #Comment 2
+
+* in google-adc.conf
+
+Yout information for Google project and Base bucket for workflow executions 
+
+* run-gatk-fc
+
+-Dbackend.providers.JES.config.project = Your information for Google project
+-Dbackend.providers.JES.config.root = Your root pathway
+

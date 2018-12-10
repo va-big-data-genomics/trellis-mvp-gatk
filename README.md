@@ -35,27 +35,20 @@ wget https://github.com/broadinstitute/cromwell/releases/download/35/cromwell-35
      https://github.com/DataBiosphere/dsub/blob/master/README.md 
 
 * Activate dsub
+
 ```
 source dsub/dsub_libs/bin/activate
 ```
 
 * Run FastqToSam tool  
-We need these parameter to the run file as below.  
-$dsub_venv : your local path where dsub was installed  
-$mvp_project : your google cloud project  
-$mvp_fastq_bucket : google cloud bucket with your fastq files  
-$mvp_ubam_bucket : google cloud bucket for your ubam file  
-$FASTQ_1, $FASTQ_2 : input files  
-$UBAM : output file  
-RG : Read Group name  
-SM : Sample Name  
- 
+Refer to input-info.txt 
 ```
 chmod 755 mvp-fastqtoubam.sh
 ./mvp-fastqtoubam.sh
 ```
 
 ## Running GATK
+Refer to input-info.txt
 ```
 chmod 755 run-gatk-fd
 ./run-gatk-fd
