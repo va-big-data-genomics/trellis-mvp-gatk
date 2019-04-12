@@ -1,0 +1,25 @@
+#!/bin/bash
+  
+###############################################################
+#                   Dsub run for FastqToSam
+#                                       
+#                                       - 4/15/2019     
+#                                       - Jina Song
+###############################################################
+
+dsub \
+  --provider google-v2 \
+  --project ${mvp_project} \
+  --regions ${mvp_region} \
+  --min-cores 1 \
+  --min-ram 6.5 \
+  --image ${mvp_gatk_image} \
+  --logging gs://${mvp_bucket}/${sample}/logging \
+  --input CFG=gs://${mvp_bucket}/gatk-mvp-pipeline/google-adc.conf \
+  --input OPTION=gs://${mvp_bucket}/gatk-mvp-pipeline/generic.google-papi.options.json \
+  --input WDL=gs://${mvp_bucket}/gatk-mvp-pipeline/fc_germline_single_sample_workflow.wdl \
+  --input SUBWDL=gs://${mvp_bucket}/gatk-mvp-pipeline/tasks_pipelines/*.wdl \
+  --input INPUT=gs://${mvp_bucket}/${sample}/${sample}.hg38.inputs.json \
+  --env MYproject=${mvp_project} \
+  --env ROOT=gs://${mvp_bucket}/${sample}/output \
+  --command 'java -Dconfig.file=${CFG} -Dbackend.providers.JES.config.project=${MYproject} -Dbackend.providers.JES.config.root=${ROOT} -jar /cromwell/cromwell.jar run ${WDL} --inputs ${INPUT} --options ${OPTION}' 
