@@ -6,10 +6,10 @@ GATK used to process MVP data on Google Cloud Platform(GCP) without Firecloud
 
 This GATK process was generated as part of the Department of Veteran's Affairs Million Veteran's Program. As part of this program, whole-genome sequencing was performed on genetic samples. Sequencing is done by Personalis. Results which include fastq files are delivered to Stanford Google Cloud Storage bucket. 
 
-This GATK process is used for variant-calling of the results. This GATK pipeline is based on the five-dollor-genome-analysis-pipeline, the Broad Institute was originally designed to run on the FireCloud platform on GCP. The five-dollor-genome-analysis-pipeline uses a unaligned bam as input and gvcf as variant calling output format. The variant-calling for MVP data, on the other hand, requires more generic process without FireCloud platform and uses fastq a fastq file as input and a vcf file as output. This GATK process provides additional steps and the modified wdl file to meet the needs of MVP.
+This GATK process is used for variant-calling of the results. This GATK pipeline is based on the five-dollar-genome-analysis-pipeline, the Broad Institute was originally designed to run on the FireCloud platform on GCP. The five-dollar-genome-analysis-pipeline uses a unaligned bam as input and gvcf as variant calling output format. The variant-calling for MVP data, on the other hand, requires more generic process without FireCloud platform and uses a fastq file as input and a vcf file as output. This GATK process provides additional steps and the modified wdl file to meet the needs of MVP.
 
-For more information about the five-dollor-genome-analysis-pipeline, you can refer the links as below.  
-* five-dollor-genome-analysis-pipeline : https://github.com/gatk-workflows/five-dollar-genome-analysis-pipeline
+For more information about the five-dollar-genome-analysis-pipeline, you can refer the links as below.  
+* five-dollar-genome-analysis-pipeline : https://github.com/gatk-workflows/five-dollar-genome-analysis-pipeline
 
 ## Introduction
 
