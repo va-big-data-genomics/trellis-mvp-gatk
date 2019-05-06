@@ -108,7 +108,7 @@ For more information about FastqToSam, you can refer the links as below.
     "germline_single_sample_workflow.sample_name": "[YOUR-SAMPLE-NAME]",
     "germline_single_sample_workflow.base_file_name": "[YOUR-SAMPLE-NAME]",
     "germline_single_sample_workflow.flowcell_unmapped_bams": ["[YOUR-UBAM1]","[YOUR-UBAM2]",...],
-    "germline_single_sample_workflow.final_vcf_base_name": ""[YOUR-SAMPLE-NAME]"",
+    "germline_single_sample_workflow.final_vcf_base_name": "[YOUR-SAMPLE-NAME]",
     ```
    Change the name of `mvp.hg38.inputs.json` file to `[YOUR-SAMPLE-NAME].hg38.inputs.json`
    ```
