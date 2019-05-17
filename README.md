@@ -77,7 +77,7 @@ For more information about FastqToSam, you can refer the links as below.
 * FastqToSam : https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.0.0/picard_sam_FastqToSam.php
 
 
-1. Edit the `dsub_run_fastqtobam` file with the sample name, readgroup, and platform information for your fastq samples.
+1. Edit the `dsub_run_fastqtobam` file (if your fastq file is larger than 50GB, use the `dsub_run_fastqtobam_forOver50G` file) with the sample name, readgroup, and platform information for your fastq samples.
 	```
 	sample="[YOUR-SAMPLE]"
 	readgroup="[YOUR-READGROUP]"
@@ -92,7 +92,11 @@ For more information about FastqToSam, you can refer the links as below.
 2. Run FastqToSam
 
 	```
-	./dsub_run_fastqtoubam
+	./dsub_run_fastqtoubam 
+	```
+	Or run FastqToSam using the command as below if a fastq file is larger than 50GB, 
+	```
+	./dsub_run_fastqtoubam_forOver50G
 	```
 
 ## Running GATK 
