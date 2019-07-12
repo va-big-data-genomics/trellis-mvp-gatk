@@ -122,7 +122,7 @@ For more information about FastqToSam, you can refer the links as below.
 3. Upload GATK-MVP pipeline files and the json file containing your unaligned bam file locations to your Google Cloud bucket 
 	```
 	gsutil cp -r gatk-mvp-pipeline/ gs://${mvp_bucket}
-	gsutil cp ${sample}.hg38.inputs.json gs://${mvp_bucket}/${sample}
+	gsutil cp ${sample}.hg38.inputs.json gs://${mvp_bucket}/${sample}/
 	```
 
 4. Run GATK
