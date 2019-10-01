@@ -33,6 +33,7 @@ task CollectQualityYieldMetrics {
     disks: "local-disk " + disk_size + " HDD"
     memory: "3 GB"
     preemptible: preemptible_tries
+    noAddress: true
   }
   output {
     File quality_yield_metrics = "${metrics_filename}"
@@ -69,6 +70,7 @@ task CollectUnsortedReadgroupBamQualityMetrics {
     memory: "7 GB"
     disks: "local-disk " + disk_size + " HDD"
     preemptible: preemptible_tries
+    noAddress: true
   }
   output {
     File base_distribution_by_cycle_pdf = "${output_bam_prefix}.base_distribution_by_cycle.pdf"
@@ -113,6 +115,7 @@ task CollectReadgroupBamQualityMetrics {
     memory: "7 GB"
     disks: "local-disk " + disk_size + " HDD"
     preemptible: preemptible_tries
+    noAddress: true
   }
   output {
     File alignment_summary_metrics = "${output_bam_prefix}.alignment_summary_metrics"
@@ -160,6 +163,7 @@ task CollectAggregationMetrics {
     memory: "7 GB"
     disks: "local-disk " + disk_size + " HDD"
     preemptible: preemptible_tries
+    noAddress: true
   }
   output {
     File alignment_summary_metrics = "${output_bam_prefix}.alignment_summary_metrics"
@@ -204,6 +208,7 @@ task CrossCheckFingerprints {
     preemptible: preemptible_tries
     memory: "2 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File cross_check_fingerprints_metrics = "${metrics_filename}"
@@ -241,6 +246,7 @@ task CheckFingerprint {
     preemptible: preemptible_tries
     memory: "1 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File summary_metrics = "${output_basename}.fingerprinting_summary_metrics"
@@ -287,6 +293,7 @@ task CheckPreValidation {
     preemptible: preemptible_tries
     docker: "python:2.7"
     memory: "2 GB"
+    noAddress: true
   }
   output {
     Float duplication_rate = read_float("duplication_value.txt")
@@ -327,6 +334,7 @@ task ValidateSamFile {
     preemptible: preemptible_tries
     memory: "7 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File report = "${report_filename}"
@@ -364,6 +372,7 @@ task CollectWgsMetrics {
     preemptible: preemptible_tries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File metrics = "${metrics_filename}"
@@ -401,6 +410,7 @@ task CollectRawWgsMetrics {
     preemptible: preemptible_tries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File metrics = "${metrics_filename}"
@@ -427,6 +437,7 @@ task CalculateReadGroupChecksum {
     preemptible: preemptible_tries
     memory: "2 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File md5_file = "${read_group_md5_filename}"
@@ -463,6 +474,7 @@ task ValidateGVCF {
     preemptible: preemptible_tries
     memory: "3500 MB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
 }
 
@@ -494,6 +506,7 @@ task CollectGvcfCallingMetrics {
     preemptible: preemptible_tries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File summary_metrics = "${metrics_basename}.variant_calling_summary_metrics"

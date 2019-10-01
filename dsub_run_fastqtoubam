@@ -36,5 +36,6 @@ dsub \
     --env RG=${readgroup} \
     --env SM=${sample} \
     --env PL=${platform} \
+    --use-private-address \
     --command '/gatk/gatk --java-options "-Xmx8G -Djava.io.tmpdir=bla" FastqToSam -F1 ${FASTQ_1} -F2 ${FASTQ_2} -O ${UBAM} -RG ${RG} -SM ${SM} -PL ${PL}'
 

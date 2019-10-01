@@ -61,6 +61,7 @@ task CreateSequenceGroupingTSV {
     preemptible: preemptible_tries
     docker: "python:2.7"
     memory: "2 GB"
+    noAddress: true
   }
   output {
     Array[Array[String]] sequence_grouping = read_tsv("sequence_grouping.txt")
@@ -107,6 +108,7 @@ task ScatterIntervalList {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     memory: "2 GB"
+    noAddress: true
   }
 }
 
@@ -143,6 +145,7 @@ task ConvertToCram {
     memory: "3 GB"
     cpu: "1"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File output_cram = "${output_basename}.cram"
@@ -172,6 +175,7 @@ task ConvertToBam {
     memory: "3 GB"
     cpu: "1"
     disks: "local-disk 200 HDD"
+    noAddress: true
   }
   output {
     File output_bam = "${output_basename}.bam"
@@ -193,5 +197,6 @@ task SumFloats {
   runtime {
     docker: "python:2.7"
     preemptible: preemptible_tries
+    noAddress: true
   }
 }

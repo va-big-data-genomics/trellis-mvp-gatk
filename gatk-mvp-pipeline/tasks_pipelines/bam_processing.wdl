@@ -42,6 +42,7 @@ task SortSam {
     cpu: "1"
     memory: "5000 MB"
     preemptible: preemptible_tries
+    noAddress: true
   }
   output {
     File output_bam = "${output_bam_basename}.bam"
@@ -81,6 +82,7 @@ task SortSamSpark {
     cpu: "16"
     memory: "102 GB"
     preemptible: preemptible_tries
+    noAddress: true
   }
   output {
     File output_bam = "${output_bam_basename}.bam"
@@ -128,6 +130,7 @@ task MarkDuplicates {
     preemptible: preemptible_tries
     memory: "7 GB"
     disks: "local-disk " + sub(disk_size, "\\..*", "") + " HDD"
+    noAddress: true
   }
   output {
     File output_bam = "${output_bam_basename}.bam"
@@ -172,6 +175,7 @@ task BaseRecalibrator {
     preemptible: preemptible_tries
     memory: "6 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File recalibration_report = "${recalibration_report_filename}"
@@ -214,6 +218,7 @@ task ApplyBQSR {
     preemptible: preemptible_tries
     memory: "3500 MB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File recalibrated_bam = "${output_bam_basename}.bam"
@@ -268,6 +273,7 @@ task GatherSortedBamFiles {
     preemptible: preemptible_tries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File output_bam = "${output_bam_basename}.bam"
@@ -301,6 +307,7 @@ task GatherUnsortedBamFiles {
     preemptible: preemptible_tries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File output_bam = "${output_bam_basename}.bam"
@@ -378,6 +385,7 @@ task CheckContamination {
     memory: "2 GB"
     disks: "local-disk " + disk_size + " HDD"
     docker: "us.gcr.io/broad-gotc-prod/verify-bam-id:c8a66425c312e5f8be46ab0c41f8d7a1942b6e16-1500298351"
+    noAddress: true
   }
   output {
     File selfSM = "${output_prefix}.selfSM"

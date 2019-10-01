@@ -61,6 +61,7 @@ task HaplotypeCaller_GATK35_GVCF {
     memory: "10 GB"
     cpu: "1"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File output_gvcf = "${gvcf_basename}.vcf.gz"
@@ -102,6 +103,7 @@ task HaplotypeCaller_GATK4_VCF {
     memory: "6.5 GB"
     cpu: "1"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File output_vcf = "${vcf_basename}.vcf.gz"
@@ -129,6 +131,7 @@ task MergeVCFs {
     preemptible: preemptible_tries
     memory: "3 GB"
     disks: "local-disk 30 HDD"
+    noAddress: true
   }
   output {
     File output_vcf = "${output_vcf_name}"
@@ -164,5 +167,6 @@ task HardFilterVcf {
     preemptible: preemptible_tries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
 }
