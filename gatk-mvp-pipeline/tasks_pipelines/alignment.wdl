@@ -25,6 +25,7 @@ task GetBwaVersion {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     memory: "1 GB"
+    noAddress: true
   }
   output {
     String version = read_string(stdout())
@@ -119,6 +120,7 @@ task SamToFastqAndBwaMemAndMba {
     memory: "14 GB"
     cpu: "16"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
   output {
     File output_bam = "${output_bam_basename}.bam"
@@ -157,5 +159,6 @@ task SamSplitter {
     preemptible: preemptible_tries
     memory: "3.75 GB"
     disks: "local-disk " + disk_size + " HDD"
+    noAddress: true
   }
 }
