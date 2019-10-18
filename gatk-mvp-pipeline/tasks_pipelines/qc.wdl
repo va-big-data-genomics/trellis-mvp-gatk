@@ -332,7 +332,8 @@ task ValidateSamFile {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
-    memory: "7 GB"
+    cpu: "4"
+    memory: "15 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true
   }
