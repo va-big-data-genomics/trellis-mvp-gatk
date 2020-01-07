@@ -59,7 +59,7 @@ task CreateSequenceGroupingTSV {
   >>>
   runtime {
     preemptible: preemptible_tries
-    docker: "python:2.7"
+    docker: "us.gcr.io/google-containers/python:2.7.11-slim"
     memory: "2 GB"
     #noAddress: true
   }
@@ -195,7 +195,7 @@ task SumFloats {
     Float total_size = read_float(stdout())
   }
   runtime {
-    docker: "python:2.7"
+    docker: "us.gcr.io/google-containers/python:2.7.11-slim"
     preemptible: preemptible_tries
     #noAddress: true
   }
