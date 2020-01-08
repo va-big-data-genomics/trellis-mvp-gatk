@@ -291,7 +291,6 @@ task CheckPreValidation {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
-    docker: "us.gcr.io/google-containers/python:2.7.11-slim"
     memory: "2 GB"
     noAddress: true
   }
