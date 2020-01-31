@@ -7,7 +7,7 @@
   "germline_single_sample_workflow.flowcell_unmapped_bams": ["YOUR-UBAM1","YOUR-UBAM2"],
   "germline_single_sample_workflow.final_vcf_base_name": "YOUR-SAMPLE-NAME",
   "germline_single_sample_workflow.unmapped_bam_suffix": ".bam",
-  "germline_single_sample_workflow.make_gatk4_single_sample_vcf": "True",
+  "germline_single_sample_workflow.make_gatk4_single_sample_vcf": "False",
   "germline_single_sample_workflow.use_gatk4_haplotype_caller": "True",
   "germline_single_sample_workflow.skip_QC": "True",
 
