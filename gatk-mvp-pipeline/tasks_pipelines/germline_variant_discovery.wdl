@@ -45,11 +45,12 @@ task HaplotypeCaller_GATK35_GVCF {
       -jar /usr/gitc/GATK35.jar \
       -T HaplotypeCaller \
       -R ${ref_fasta} \
-      -o ${gvcf_basename}.vcf.gz \
+      -o ${gvcf_basename}.g.vcf.gz \
       -I local.sharded.bam \
       -L ${interval_list} \
       -ERC GVCF \
       --max_alternate_alleles 3 \
+      --emitRefConfidence GVCF \
       -variant_index_parameter 128000 \
       -variant_index_type LINEAR \
       -contamination ${default=0 contamination} \
@@ -64,8 +65,8 @@ task HaplotypeCaller_GATK35_GVCF {
     noAddress: true
   }
   output {
-    File output_gvcf = "${gvcf_basename}.vcf.gz"
-    File output_gvcf_index = "${gvcf_basename}.vcf.gz.tbi"
+    File output_gvcf = "${gvcf_basename}.g.vcf.gz"
+    File output_gvcf_index = "${gvcf_basename}.g.vcf.gz.tbi"
   }
 }
 
