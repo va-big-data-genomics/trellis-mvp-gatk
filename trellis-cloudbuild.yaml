@@ -4,5 +4,5 @@ steps:
          'cp',
          '-r',
          './',
-         'gs://${_BUCKET}/${_PATH}/gatk-mvp/'
+         'gs://${_BUCKET}/${_PATH}/gatk-mvp/${SHORT_SHA}/'
   ]
