@@ -406,7 +406,7 @@ workflow germline_single_sample_workflow {
       ignore = ["MISSING_TAG_NM"],
       max_output = 1000000000,
       is_outlier_data = is_outlier_data,
-      preemptible_tries = agg_preemptible_tries
+      #preemptible_tries = agg_preemptible_tries
   }
 
   # Break the calling interval_list into sub-intervals
