@@ -23,6 +23,7 @@ task HaplotypeCaller_GATK35_GVCF {
   File ref_fasta_index
   Float? contamination
   Int preemptible_tries
+  Int max_retries
   Int hc_scatter
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
@@ -58,6 +59,7 @@ task HaplotypeCaller_GATK35_GVCF {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "10 GB"
     cpu: "1"
     disks: "local-disk " + disk_size + " HDD"
@@ -79,6 +81,7 @@ task HaplotypeCaller_GATK4_VCF {
   Float contamination
   Boolean make_gvcf
   Int preemptible_tries
+  Int max_retries
   Int hc_scatter
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
@@ -100,6 +103,7 @@ task HaplotypeCaller_GATK4_VCF {
   runtime {
     docker: "us.gcr.io/broad-gatk/gatk:4.0.2.1"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "6.5 GB"
     cpu: "1"
     disks: "local-disk " + disk_size + " HDD"
@@ -117,6 +121,7 @@ task MergeVCFs {
   Array[File] input_vcfs_indexes
   String output_vcf_name
   Int preemptible_tries
+  Int max_retries
 
   # Using MergeVcfs instead of GatherVcfs so we can create indices
   # See https://github.com/broadinstitute/picard/issues/789 for relevant GatherVcfs ticket
@@ -129,6 +134,7 @@ task MergeVCFs {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "3 GB"
     disks: "local-disk 30 HDD"
     noAddress: true
@@ -145,6 +151,7 @@ task HardFilterVcf {
   String vcf_basename
   File interval_list
   Int preemptible_tries
+  Int max_retries
 
   Int disk_size = ceil(2 * size(input_vcf, "GB")) + 20
   String output_vcf_name = vcf_basename + ".filtered.vcf.gz"
@@ -165,6 +172,7 @@ task HardFilterVcf {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.3-1513176735"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true

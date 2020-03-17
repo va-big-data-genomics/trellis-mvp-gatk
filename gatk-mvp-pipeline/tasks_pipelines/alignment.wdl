@@ -15,6 +15,7 @@
 
 # Get version of BWA
 task GetBwaVersion {
+  Int max_retries
   command {
     # not setting set -o pipefail here because /bwa has a rc=1 and we dont want to allow rc=1 to succeed because
     # the sed may also fail with that error and that is something we actually want to fail on.
@@ -24,6 +25,7 @@ task GetBwaVersion {
   }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
+    maxRetries: max_retries
     memory: "1 GB"
     noAddress: true
   }
@@ -53,6 +55,7 @@ task SamToFastqAndBwaMemAndMba {
   File ref_sa
   Int compression_level
   Int preemptible_tries
+  Int max_retries
 
   Float unmapped_bam_size = size(input_bam, "GB")
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
@@ -117,6 +120,7 @@ task SamToFastqAndBwaMemAndMba {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "14 GB"
     cpu: "16"
     disks: "local-disk " + disk_size + " HDD"
@@ -132,6 +136,7 @@ task SamSplitter {
   File input_bam
   Int n_reads
   Int preemptible_tries
+  Int max_retries
   Int compression_level
 
   Float unmapped_bam_size = size(input_bam, "GB")
@@ -157,6 +162,7 @@ task SamSplitter {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.3-1513176735"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "3.75 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true

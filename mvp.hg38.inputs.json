@@ -48,6 +48,7 @@
   "germline_single_sample_workflow.agg_large_disk": 400,
   "germline_single_sample_workflow.preemptible_tries": 3,
   "germline_single_sample_workflow.agg_preemptible_tries": 3,
+  "germline_single_sample_workflow.max_retries": 3,
 
   "##_COMMENT6": "MISC",
   "germline_single_sample_workflow.break_bands_at_multiples_of": 1000000,

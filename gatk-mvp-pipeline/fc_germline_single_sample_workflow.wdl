@@ -88,6 +88,7 @@ workflow germline_single_sample_workflow {
 
   Int preemptible_tries
   Int agg_preemptible_tries
+  Int max_retries
 
   Boolean skip_QC
   Boolean make_gatk4_single_sample_vcf
@@ -119,6 +120,7 @@ workflow germline_single_sample_workflow {
           input_bam = unmapped_bam,
           metrics_filename = unmapped_bam_basename + ".unmapped.quality_yield_metrics",
           preemptible_tries = preemptible_tries
+          max_retries = max_retries
       }
     }
 
@@ -141,7 +143,8 @@ workflow germline_single_sample_workflow {
           ref_pac = ref_pac,
           ref_sa = ref_sa,
           compression_level = compression_level,
-          preemptible_tries = preemptible_tries
+          preemptible_tries = preemptible_tries,
+          max_retries = max_retries
       }
     }
 
@@ -163,7 +166,8 @@ workflow germline_single_sample_workflow {
           ref_sa = ref_sa,
           bwa_version = GetBwaVersion.version,
           compression_level = compression_level,
-          preemptible_tries = preemptible_tries
+          preemptible_tries = preemptible_tries,
+          max_retries = max_retries
       }
     }
 
@@ -178,7 +182,8 @@ workflow germline_single_sample_workflow {
         input:
           input_bam = output_aligned_bam,
           output_bam_prefix = unmapped_bam_basename + ".readgroup",
-          preemptible_tries = preemptible_tries
+          preemptible_tries = preemptible_tries,
+          max_retries = max_retries
       }
     }
   }
@@ -187,7 +192,8 @@ workflow germline_single_sample_workflow {
   call Utils.SumFloats as SumFloats {
     input:
       sizes = mapped_bam_size,
-      preemptible_tries = preemptible_tries
+      preemptible_tries = preemptible_tries,
+      max_retries = max_retries
   }
 
   # Aggregate aligned+merged flowcell BAM files and mark duplicates
@@ -200,7 +206,8 @@ workflow germline_single_sample_workflow {
       metrics_filename = base_file_name + ".duplicate_metrics",
       total_input_size = SumFloats.total_size,
       compression_level = compression_level,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   # Sort aggregated+deduped BAM file
@@ -209,14 +216,16 @@ workflow germline_single_sample_workflow {
       input_bam = MarkDuplicates.output_bam,
       output_bam_basename = base_file_name + ".aligned.duplicate_marked.sorted",
       compression_level = compression_level,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   # Create list of sequences for scatter-gather parallelization
   call Utils.CreateSequenceGroupingTSV as CreateSequenceGroupingTSV {
     input:
       ref_dict = ref_dict,
-      preemptible_tries = preemptible_tries
+      preemptible_tries = preemptible_tries,
+      max_retries = max_retries
   }
 
   # Estimate level of cross-sample contamination
@@ -231,6 +240,7 @@ workflow germline_single_sample_workflow {
       ref_fasta_index = ref_fasta_index,
       output_prefix = base_file_name + ".preBqsr",
       preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries,
       contamination_underestimation_factor = 0.75
   }
 
@@ -257,7 +267,8 @@ workflow germline_single_sample_workflow {
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
         bqsr_scatter = bqsr_divisor,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
   }
 
@@ -267,7 +278,8 @@ workflow germline_single_sample_workflow {
     input:
       input_bqsr_reports = BaseRecalibrator.recalibration_report,
       output_report_filename = base_file_name + ".recal_data.csv",
-      preemptible_tries = preemptible_tries
+      preemptible_tries = preemptible_tries,
+      max_retries = max_retries
   }
 
   scatter (subgroup in CreateSequenceGroupingTSV.sequence_grouping_with_unmapped) {
@@ -283,7 +295,8 @@ workflow germline_single_sample_workflow {
         ref_fasta_index = ref_fasta_index,
         bqsr_scatter = bqsr_divisor,
         compression_level = compression_level,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
   }
 
@@ -296,7 +309,8 @@ workflow germline_single_sample_workflow {
       output_bam_basename = base_file_name,
       total_input_size = agg_bam_size,
       compression_level = compression_level,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   #BQSR bins the qualities which makes a significantly smaller bam
@@ -314,7 +328,8 @@ workflow germline_single_sample_workflow {
         ref_dict = ref_dict,
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
 
     # QC the final BAM some more (no such thing as too much QC)
@@ -326,7 +341,8 @@ workflow germline_single_sample_workflow {
         ref_dict = ref_dict,
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
 
     # QC the sample WGS metrics (stringent thresholds)
@@ -339,7 +355,8 @@ workflow germline_single_sample_workflow {
         ref_fasta_index = ref_fasta_index,
         wgs_coverage_interval_list = wgs_coverage_interval_list,
         read_length = read_length,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
 
     # QC the sample raw WGS metrics (common thresholds)
@@ -352,7 +369,8 @@ workflow germline_single_sample_workflow {
         ref_fasta_index = ref_fasta_index,
         wgs_coverage_interval_list = wgs_coverage_interval_list,
         read_length = read_length,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
 
     # Generate a checksum per readgroup in the final BAM
@@ -361,7 +379,8 @@ workflow germline_single_sample_workflow {
         input_bam = GatherBamFiles.output_bam,
         input_bam_index = GatherBamFiles.output_bam_index,
         read_group_md5_filename = recalibrated_bam_basename + ".bam.read_group_md5",
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
   }
 
@@ -377,7 +396,8 @@ workflow germline_single_sample_workflow {
       ref_fasta = ref_fasta,
       ref_fasta_index = ref_fasta_index,
       output_basename = base_file_name,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   if (!skip_QC) {
@@ -388,7 +408,8 @@ workflow germline_single_sample_workflow {
         chimerism_metrics = select_first([CollectAggregationMetrics.alignment_summary_metrics, ""]),
         max_duplication_in_reasonable_sample = max_duplication_in_reasonable_sample,
         max_chimerism_in_reasonable_sample = max_chimerism_in_reasonable_sample,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
   }
 
@@ -407,7 +428,8 @@ workflow germline_single_sample_workflow {
       max_output = 1000000000,
       is_outlier_data = is_outlier_data,
       #preemptible_tries = agg_preemptible_tries
-      preemptible_tries = 0
+      preemptible_tries = 0,
+      max_retries = max_retries
   }
 
   # Break the calling interval_list into sub-intervals
@@ -440,7 +462,8 @@ workflow germline_single_sample_workflow {
           ref_fasta = ref_fasta,
           ref_fasta_index = ref_fasta_index,
           hc_scatter = hc_divisor,
-          preemptible_tries = agg_preemptible_tries
+          preemptible_tries = agg_preemptible_tries,
+          max_retries = max_retries
       }
 
       if (make_gatk4_single_sample_vcf) {
@@ -450,7 +473,8 @@ workflow germline_single_sample_workflow {
             input_vcf_index = HaplotypeCaller4.output_vcf_index,
             vcf_basename = base_file_name,
             interval_list = ScatterIntervalList.out[index],
-            preemptible_tries = preemptible_tries
+            preemptible_tries = preemptible_tries,
+            max_retries = max_retries
         }
       }
     }
@@ -465,7 +489,8 @@ workflow germline_single_sample_workflow {
           ref_fasta = ref_fasta,
           ref_fasta_index = ref_fasta_index,
           hc_scatter = hc_divisor,
-          preemptible_tries = agg_preemptible_tries
+          preemptible_tries = agg_preemptible_tries,
+          max_retries = max_retries
        }
      }
 
@@ -481,7 +506,8 @@ workflow germline_single_sample_workflow {
       input_vcfs = merge_input,
       input_vcfs_indexes = merge_input_index,
       output_vcf_name = final_vcf_base_name + name_token + ".vcf.gz",
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   # Outputs that will be retained when execution is complete

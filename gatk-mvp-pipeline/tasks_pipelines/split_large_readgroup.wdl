@@ -37,6 +37,7 @@ workflow split_large_readgroup {
   File ref_sa
   Int compression_level
   Int preemptible_tries
+  Int max_retries
   Int reads_per_file = 48000000
 
   call Alignment.SamSplitter as SamSplitter {
@@ -44,6 +45,7 @@ workflow split_large_readgroup {
       input_bam = input_bam,
       n_reads = reads_per_file,
       preemptible_tries = preemptible_tries,
+      max_retries = max_retries,
       compression_level = compression_level
   }
 
@@ -67,7 +69,8 @@ workflow split_large_readgroup {
         ref_sa = ref_sa,
         bwa_version = bwa_version,
         compression_level = compression_level,
-        preemptible_tries = preemptible_tries
+        preemptible_tries = preemptible_tries,
+        max_retries = max_retries
     }
 
     Float current_mapped_size = size(SamToFastqAndBwaMemAndMba.output_bam, "GB")
@@ -76,7 +79,8 @@ workflow split_large_readgroup {
   call Utils.SumFloats as SumSplitAlignedSizes {
     input:
       sizes = current_mapped_size,
-      preemptible_tries = preemptible_tries
+      preemptible_tries = preemptible_tries,
+      max_retries = max_retries
   }
 
   call Processing.GatherUnsortedBamFiles as GatherMonolithicBamFile {
@@ -85,6 +89,7 @@ workflow split_large_readgroup {
       total_input_size = SumSplitAlignedSizes.total_size,
       output_bam_basename = output_bam_basename,
       preemptible_tries = preemptible_tries,
+      max_retries = max_retries,
       compression_level = compression_level
   }
   output {

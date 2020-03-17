@@ -55,6 +55,7 @@ workflow to_bam_workflow {
 
   Int preemptible_tries
   Int agg_preemptible_tries
+  Int max_retries
 
   Float cutoff_for_large_rg_in_gb = 20.0
 
@@ -83,6 +84,7 @@ workflow to_bam_workflow {
         input_bam = unmapped_bam,
         metrics_filename = unmapped_bam_basename + ".unmapped.quality_yield_metrics",
         preemptible_tries = preemptible_tries
+        max_retries = max_retries
     }
 
     if (unmapped_bam_size > cutoff_for_large_rg_in_gb) {
@@ -104,7 +106,8 @@ workflow to_bam_workflow {
           ref_pac = ref_pac,
           ref_sa = ref_sa,
           compression_level = compression_level,
-          preemptible_tries = preemptible_tries
+          preemptible_tries = preemptible_tries,
+          max_retries = max_retries
       }
     }
 
@@ -126,7 +129,8 @@ workflow to_bam_workflow {
           ref_sa = ref_sa,
           bwa_version = GetBwaVersion.version,
           compression_level = compression_level,
-          preemptible_tries = preemptible_tries
+          preemptible_tries = preemptible_tries,
+          max_retries = max_retries
       }
     }
 
@@ -140,7 +144,8 @@ workflow to_bam_workflow {
       input:
         input_bam = output_aligned_bam,
         output_bam_prefix = unmapped_bam_basename + ".readgroup",
-        preemptible_tries = preemptible_tries
+        preemptible_tries = preemptible_tries,
+        max_retries = max_retries
     }
   }
 
@@ -148,7 +153,8 @@ workflow to_bam_workflow {
   call Utils.SumFloats as SumFloats {
     input:
       sizes = mapped_bam_size,
-      preemptible_tries = preemptible_tries
+      preemptible_tries = preemptible_tries,
+      max_retries = max_retries
   }
 
   # Aggregate aligned+merged flowcell BAM files and mark duplicates
@@ -161,7 +167,8 @@ workflow to_bam_workflow {
       metrics_filename = base_file_name + ".duplicate_metrics",
       total_input_size = SumFloats.total_size,
       compression_level = compression_level,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   # Sort aggregated+deduped BAM file and fix tags
@@ -170,7 +177,8 @@ workflow to_bam_workflow {
       input_bam = MarkDuplicates.output_bam,
       output_bam_basename = base_file_name + ".aligned.duplicate_marked.sorted",
       compression_level = compression_level,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   Float agg_bam_size = size(SortSampleBam.output_bam, "GB")
@@ -184,7 +192,8 @@ workflow to_bam_workflow {
         haplotype_database_file = haplotype_database_file,
         metrics_filename = base_file_name + ".crosscheck",
         total_input_size = agg_bam_size,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
   }
 
@@ -192,7 +201,8 @@ workflow to_bam_workflow {
   call Utils.CreateSequenceGroupingTSV as CreateSequenceGroupingTSV {
     input:
       ref_dict = ref_dict,
-      preemptible_tries = preemptible_tries
+      preemptible_tries = preemptible_tries,
+      max_retries = max_retries
   }
 
   # Estimate level of cross-sample contamination
@@ -207,6 +217,7 @@ workflow to_bam_workflow {
       ref_fasta_index = ref_fasta_index,
       output_prefix = base_file_name + ".preBqsr",
       preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries,
       contamination_underestimation_factor = 0.75
   }
 
@@ -233,7 +244,8 @@ workflow to_bam_workflow {
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
         bqsr_scatter = bqsr_divisor,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
   }
 
@@ -243,7 +255,8 @@ workflow to_bam_workflow {
     input:
       input_bqsr_reports = BaseRecalibrator.recalibration_report,
       output_report_filename = base_file_name + ".recal_data.csv",
-      preemptible_tries = preemptible_tries
+      preemptible_tries = preemptible_tries,
+      max_retries = max_retries
   }
 
   scatter (subgroup in CreateSequenceGroupingTSV.sequence_grouping_with_unmapped) {
@@ -259,7 +272,8 @@ workflow to_bam_workflow {
         ref_fasta_index = ref_fasta_index,
         bqsr_scatter = bqsr_divisor,
         compression_level = compression_level,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
   }
 
@@ -270,7 +284,8 @@ workflow to_bam_workflow {
       output_bam_basename = base_file_name,
       total_input_size = agg_bam_size,
       compression_level = compression_level,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   # QC the final BAM (consolidated after scattered BQSR)
@@ -282,7 +297,8 @@ workflow to_bam_workflow {
       ref_dict = ref_dict,
       ref_fasta = ref_fasta,
       ref_fasta_index = ref_fasta_index,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   # QC the final BAM some more (no such thing as too much QC)
@@ -294,7 +310,8 @@ workflow to_bam_workflow {
       ref_dict = ref_dict,
       ref_fasta = ref_fasta,
       ref_fasta_index = ref_fasta_index,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   if (defined(haplotype_database_file) && defined(fingerprint_genotypes_file)) {
@@ -308,7 +325,8 @@ workflow to_bam_workflow {
         genotypes_index = fingerprint_genotypes_index,
         output_basename = base_file_name,
         sample = sample_name,
-        preemptible_tries = agg_preemptible_tries
+        preemptible_tries = agg_preemptible_tries,
+        max_retries = max_retries
     }
   }
 
@@ -322,7 +340,8 @@ workflow to_bam_workflow {
       ref_fasta_index = ref_fasta_index,
       wgs_coverage_interval_list = wgs_coverage_interval_list,
       read_length = read_length,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   # QC the sample raw WGS metrics (common thresholds)
@@ -335,7 +354,8 @@ workflow to_bam_workflow {
       ref_fasta_index = ref_fasta_index,
       wgs_coverage_interval_list = wgs_coverage_interval_list,
       read_length = read_length,
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   # Generate a checksum per readgroup in the final BAM
@@ -344,7 +364,8 @@ workflow to_bam_workflow {
       input_bam = GatherBamFiles.output_bam,
       input_bam_index = GatherBamFiles.output_bam_index,
       read_group_md5_filename = recalibrated_bam_basename + ".bam.read_group_md5",
-      preemptible_tries = agg_preemptible_tries
+      preemptible_tries = agg_preemptible_tries,
+      max_retries = max_retries
   }
 
   # Outputs that will be retained when execution is complete

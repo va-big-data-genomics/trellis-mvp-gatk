@@ -17,6 +17,7 @@
 task CreateSequenceGroupingTSV {
   File ref_dict
   Int preemptible_tries
+  Int max_retries
 
   # Use python to create the Sequencing Groupings used for BQSR and PrintReads Scatter.
   # It outputs to stdout where it is parsed into a wdl Array[Array[String]]
@@ -59,6 +60,7 @@ task CreateSequenceGroupingTSV {
   >>>
   runtime {
     preemptible: preemptible_tries
+    maxRetries: max_retries
     #docker: "us.gcr.io/google-containers/python:2.7.11-slim"
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
 
@@ -78,6 +80,7 @@ task ScatterIntervalList {
   File interval_list
   Int scatter_count
   Int break_bands_at_multiples_of
+  Int max_retries
 
   command <<<
     set -e
@@ -110,6 +113,7 @@ task ScatterIntervalList {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     memory: "2 GB"
+    maxRetries: max_retries
     noAddress: true
   }
 }
@@ -122,6 +126,7 @@ task ConvertToCram {
   File ref_fasta_index
   String output_basename
   Int preemptible_tries
+  Int max_retries
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB")
   Int disk_size = ceil(2 * size(input_bam, "GB") + ref_size) + 20
@@ -144,6 +149,7 @@ task ConvertToCram {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "3 GB"
     cpu: "1"
     disks: "local-disk " + disk_size + " HDD"
@@ -162,6 +168,7 @@ task ConvertToBam {
   File ref_fasta
   File ref_fasta_index
   String output_basename
+  Int max_retries
 
   command <<<
     set -e
@@ -174,6 +181,7 @@ task ConvertToBam {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: 3
+    maxRetries: max_retries
     memory: "3 GB"
     cpu: "1"
     disks: "local-disk 200 HDD"
@@ -189,6 +197,7 @@ task ConvertToBam {
 task SumFloats {
   Array[Float] sizes
   Int preemptible_tries
+  Int max_retries
 
   command <<<
   python -c "print ${sep="+" sizes}"
@@ -200,6 +209,7 @@ task SumFloats {
     #docker: "us.gcr.io/google-containers/python:2.7.11-slim"
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     noAddress: true
   }
 }

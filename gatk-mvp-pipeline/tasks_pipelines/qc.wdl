@@ -18,6 +18,7 @@ task CollectQualityYieldMetrics {
   File input_bam
   String metrics_filename
   Int preemptible_tries
+  Int max_retries
 
   Int disk_size = ceil(size(input_bam, "GB")) + 20
 
@@ -33,6 +34,7 @@ task CollectQualityYieldMetrics {
     disks: "local-disk " + disk_size + " HDD"
     memory: "3 GB"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     noAddress: true
   }
   output {
@@ -45,6 +47,7 @@ task CollectUnsortedReadgroupBamQualityMetrics {
   File input_bam
   String output_bam_prefix
   Int preemptible_tries
+  Int max_retries
 
   Int disk_size = ceil(size(input_bam, "GB")) + 20
 
@@ -70,6 +73,7 @@ task CollectUnsortedReadgroupBamQualityMetrics {
     memory: "7 GB"
     disks: "local-disk " + disk_size + " HDD"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     noAddress: true
   }
   output {
@@ -93,6 +97,7 @@ task CollectReadgroupBamQualityMetrics {
   File ref_fasta
   File ref_fasta_index
   Int preemptible_tries
+  Int max_retries
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
   Int disk_size = ceil(size(input_bam, "GB") + ref_size) + 20
@@ -115,6 +120,7 @@ task CollectReadgroupBamQualityMetrics {
     memory: "7 GB"
     disks: "local-disk " + disk_size + " HDD"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     noAddress: true
   }
   output {
@@ -134,6 +140,7 @@ task CollectAggregationMetrics {
   File ref_fasta
   File ref_fasta_index
   Int preemptible_tries
+  Int max_retries
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
   Int disk_size = ceil(size(input_bam, "GB") + ref_size) + 20
@@ -163,6 +170,7 @@ task CollectAggregationMetrics {
     memory: "7 GB"
     disks: "local-disk " + disk_size + " HDD"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     noAddress: true
   }
   output {
@@ -189,6 +197,7 @@ task CrossCheckFingerprints {
   String metrics_filename
   Float total_input_size
   Int preemptible_tries
+  Int max_retries
 
   Int disk_size = ceil(total_input_size) + 20
 
@@ -206,6 +215,7 @@ task CrossCheckFingerprints {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "2 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true
@@ -225,6 +235,7 @@ task CheckFingerprint {
   File? genotypes_index
   String sample
   Int preemptible_tries
+  Int max_retries
 
   Int disk_size = ceil(size(input_bam, "GB")) + 20
 
@@ -244,6 +255,7 @@ task CheckFingerprint {
  runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "1 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true
@@ -260,6 +272,7 @@ task CheckPreValidation {
     Float max_duplication_in_reasonable_sample
     Float max_chimerism_in_reasonable_sample
     Int preemptible_tries
+    Int max_retries
 
   command <<<
     set -o pipefail
@@ -291,6 +304,7 @@ task CheckPreValidation {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "2 GB"
     noAddress: true
   }
@@ -311,7 +325,8 @@ task ValidateSamFile {
   Int? max_output
   Array[String]? ignore
   Boolean? is_outlier_data
-  Int preemptible_tries
+  #Int preemptible_tries
+  Int max_retries
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
   Int disk_size = ceil(size(input_bam, "GB") + ref_size) + 20
@@ -330,7 +345,8 @@ task ValidateSamFile {
   }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    preemptible: preemptible_tries
+    #preemptible: preemptible_tries
+    maxRetries: max_retries
     cpu: "2"
     memory: "7 GB"
     disks: "local-disk " + disk_size + " HDD"
@@ -351,6 +367,7 @@ task CollectWgsMetrics {
   File ref_fasta_index
   Int read_length
   Int preemptible_tries
+  Int max_retries
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB")
   Int disk_size = ceil(size(input_bam, "GB") + ref_size) + 20
@@ -370,6 +387,7 @@ task CollectWgsMetrics {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true
@@ -389,6 +407,7 @@ task CollectRawWgsMetrics {
   File ref_fasta_index
   Int read_length
   Int preemptible_tries
+  Int max_retries
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB")
   Int disk_size = ceil(size(input_bam, "GB") + ref_size) + 20
@@ -408,6 +427,7 @@ task CollectRawWgsMetrics {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true
@@ -423,6 +443,7 @@ task CalculateReadGroupChecksum {
   File input_bam_index
   String read_group_md5_filename
   Int preemptible_tries
+  Int max_retries
 
   Int disk_size = ceil(size(input_bam, "GB")) + 20
 
@@ -435,6 +456,7 @@ task CalculateReadGroupChecksum {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "2 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true
@@ -455,6 +477,7 @@ task ValidateGVCF {
   File dbSNP_vcf_index
   File wgs_calling_interval_list
   Int preemptible_tries
+  Int max_retries
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
   Int disk_size = ceil(size(input_vcf, "GB") + size(dbSNP_vcf, "GB") + ref_size) + 20
@@ -472,6 +495,7 @@ task ValidateGVCF {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "3500 MB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true
@@ -488,6 +512,7 @@ task CollectGvcfCallingMetrics {
   File ref_dict
   File wgs_evaluation_interval_list
   Int preemptible_tries
+  Int max_retries
 
   Int disk_size = ceil(size(input_vcf, "GB") + size(dbSNP_vcf, "GB")) + 20
 
@@ -504,6 +529,7 @@ task CollectGvcfCallingMetrics {
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.3.2-1510681135"
     preemptible: preemptible_tries
+    maxRetries: max_retries
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true
