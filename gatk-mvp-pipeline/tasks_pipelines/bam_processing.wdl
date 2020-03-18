@@ -18,6 +18,7 @@ task SortSam {
   File input_bam
   String output_bam_basename
   Int preemptible_tries
+  Int max_retries
   Int compression_level
 
   # SortSam spills to disk a lot more because we are only store 300000 records in RAM now because its faster for our data so it needs
@@ -57,6 +58,7 @@ task SortSamSpark {
   File input_bam
   String output_bam_basename
   Int preemptible_tries
+  Int max_retries
   Int compression_level
 
   # SortSam spills to disk a lot more because we are only store 300000 records in RAM now because its faster for our data so it needs
