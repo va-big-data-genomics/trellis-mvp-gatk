@@ -119,7 +119,7 @@ workflow germline_single_sample_workflow {
         input:
           input_bam = unmapped_bam,
           metrics_filename = unmapped_bam_basename + ".unmapped.quality_yield_metrics",
-          preemptible_tries = preemptible_tries
+          preemptible_tries = preemptible_tries,
           max_retries = max_retries
       }
     }
