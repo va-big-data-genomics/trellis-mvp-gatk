@@ -104,7 +104,10 @@ workflow germline_single_sample_workflow {
 
   # Get the version of BWA to include in the PG record in the header of the BAM produced
   # by MergeBamAlignment.
-  call Alignment.GetBwaVersion
+  call Alignment.GetBwaVersion {
+    input:
+      max_retries = max_retries
+  }
 
   # Align flowcell-level unmapped input bams in parallel
   scatter (unmapped_bam in flowcell_unmapped_bams) {
