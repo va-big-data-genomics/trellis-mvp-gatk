@@ -438,6 +438,7 @@ workflow germline_single_sample_workflow {
     input:
       interval_list = wgs_calling_interval_list,
       scatter_count = haplotype_scatter_count,
+      max_retries = max_retries,
       break_bands_at_multiples_of = break_bands_at_multiples_of
   }
 
