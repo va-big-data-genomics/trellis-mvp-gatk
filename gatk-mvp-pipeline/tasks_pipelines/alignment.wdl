@@ -15,6 +15,7 @@
 
 # Get version of BWA
 task GetBwaVersion {
+  Int max_retries
 
   command {
     # not setting set -o pipefail here because /bwa has a rc=1 and we dont want to allow rc=1 to succeed because
