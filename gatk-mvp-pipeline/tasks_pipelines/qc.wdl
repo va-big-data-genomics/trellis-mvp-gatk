@@ -325,7 +325,7 @@ task ValidateSamFile {
   Int? max_output
   Array[String]? ignore
   Boolean? is_outlier_data
-  #Int preemptible_tries
+  Int preemptible_tries
   Int max_retries
 
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
@@ -345,10 +345,10 @@ task ValidateSamFile {
   }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    #preemptible: preemptible_tries
+    preemptible: preemptible_tries
     maxRetries: max_retries
     cpu: "2"
-    memory: "7 GB"
+    memory: "8 GB"
     disks: "local-disk " + disk_size + " HDD"
     noAddress: true
   }
