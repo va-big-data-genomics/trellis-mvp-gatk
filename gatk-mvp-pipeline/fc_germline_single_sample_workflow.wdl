@@ -430,8 +430,7 @@ workflow germline_single_sample_workflow {
       ignore = ["MISSING_TAG_NM"],
       max_output = 1000000000,
       is_outlier_data = is_outlier_data,
-      #preemptible_tries = agg_preemptible_tries
-      #preemptible_tries = 0,
+      preemptible_tries = agg_preemptible_tries,
       max_retries = max_retries
   }
 
