@@ -22,4 +22,5 @@ dsub \
   --input INPUT=gs://${mvp_bucket}/${sample}/${sample}.hg38.inputs.json \
   --env MYproject=${mvp_project} \
   --env ROOT=gs://${mvp_bucket}/${sample}/output \
+  --use-private-address \
   --command 'java -Dconfig.file=${CFG} -Dbackend.providers.JES.config.project=${MYproject} -Dbackend.providers.JES.config.root=${ROOT} -jar /cromwell/cromwell.jar run ${WDL} --inputs ${INPUT} --options ${OPTION}' 
